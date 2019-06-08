@@ -1,14 +1,16 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
+import { Global, jsx } from '@emotion/core';
 import { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import globalStyles from './globalStyles';
 import 'react-quill/dist/quill.snow.css';
 
 const folders = [
-  { id: 1, name: 'Chapter 1', documents: [] },
+  { id: '1', name: 'Chapter 1', documents: [] },
   {
-    id: 2,
+    id: '2',
     name: 'Chapter 2',
     documents: [
       { id: '4af1ed95-60dd-4563-9a88-193640d6794b', name: 'First scene' },
@@ -54,15 +56,8 @@ function App() {
         gridTemplateRows: '50px 1fr',
       }}
     >
-      <header
-        css={{
-          gridArea: 'header',
-          background: 'linear-gradient(to left, #F56217, #0B486B)',
-          color: 'whitesmoke',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      />
+      <Global styles={globalStyles} />
+      <Header />
       <Sidebar
         projectName="My First Project"
         projectFolders={folders}
