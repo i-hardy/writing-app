@@ -39,6 +39,7 @@ function Sidebar({
       />
       <ul
         css={{
+          borderTop: '1px solid var(--imperial-blue)',
           paddingLeft: 0,
           listStyle: 'none',
         }}

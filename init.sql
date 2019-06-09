@@ -1,0 +1,1 @@
+create database writing_app

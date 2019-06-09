@@ -4,9 +4,9 @@ const Hapi = require('hapi');
 const inert = require('inert');
 const pino = require('hapi-pino');
 
+const { PORT, HOSTNAME, NODE_ENV } = require('./lib/config');
 const typeDefs = require('./lib/schema');
 const resolvers = require('./lib/resolvers');
-const { PORT, HOSTNAME, NODE_ENV } = require('./lib/config');
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
