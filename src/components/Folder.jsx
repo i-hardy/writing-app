@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder, faFolderOpen } from '@fortawesome/free-regular-svg-icons';
+import List from './styled/List';
 import Document from './Document';
 
 const IconWrapper = styled.span`
@@ -38,24 +39,19 @@ function Folder({
       </IconWrapper>
       <ContentEditable
         className="editable"
-        tagName="h3"
-        css={{ margin: '0.5rem', display: 'inline-block' }}
+        tagName="h5"
+        css={{ margin: '0.5rem', display: 'inline-block', fontWeight: 500 }}
         html={folder.name}
         onChange={({ target }) => onNameChange(target)}
       />
       {open && (
-        <ul
-          css={{
-            paddingLeft: '1rem',
-            listStyle: 'none',
-          }}
-        >
+        <List padding="1rem">
           {folder.documents.map(document => (
             <Document
-              documentName={document.name}
-              key={document.id}
-              onClick={() => onDocumentPick(document.id)}
-              isSelected={document.id === selectedDocument}
+              documentName={document.title}
+              key={document.documentID}
+              onClick={() => onDocumentPick(document.documentID)}
+              isSelected={document.documentID === selectedDocument}
             />
           ))}
           <li>
@@ -63,7 +59,7 @@ function Folder({
               Add document
             </button>
           </li>
-        </ul>
+        </List>
       )}
     </li>
   );

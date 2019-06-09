@@ -23,7 +23,7 @@ const globalStyles = css`
 
   body {
     margin: 0;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
   }
 `;
 

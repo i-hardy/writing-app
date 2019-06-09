@@ -1,71 +1,102 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import Aside from './styled/Aside';
+import List from './styled/List';
 import Folder from './Folder';
 
-function Sidebar({
-  projectName, projectFolders, onDocumentPick, selectedDocument,
-}) {
-  const [localProjectName, setName] = useState(projectName);
-  const [folders, setFolders] = useState(projectFolders);
-
-  function setFolderInternals({ id, name, documents }) {
-    setFolders(
-      folders.map((folder) => {
-        if (folder.id === id) {
-          return { id, name, documents };
+const GET_PROJECT = gql`
+  {
+    project(projectID: "7e911920-8a3c-11e9-9356-c1e825123dbb") {
+      name
+      draft {
+        folders {
+          folderID
+          name
+          documents {
+            documentID
+            title
+          }
         }
-        return folder;
-      }),
-    );
+      }
+      notes {
+        folders {
+          folderID
+          name
+          documents {
+            documentID
+            title
+          }
+        }
+      }
+    }
   }
+`;
 
+function Sidebar({ onDocumentPick, selectedDocument }) {
   return (
-    <aside
-      css={{
-        padding: '1rem',
-        gridArea: 'sidebar',
-        backgroundColor: 'var(--isabelline)',
-      }}
-    >
-      <ContentEditable
-        css={{ margin: 0 }}
-        className="editable"
-        tagName="h2"
-        html={localProjectName}
-        onChange={({ target }) => setName(target.value)}
-      />
-      <ul
-        css={{
-          borderTop: '1px solid var(--imperial-blue)',
-          paddingLeft: 0,
-          listStyle: 'none',
+    <Aside>
+      <Query query={GET_PROJECT}>
+        {({ loading, error, data }) => {
+          if (loading) return 'Loading...';
+          if (error) return `Error! ${error.message}`;
+          return (
+            <div>
+              <ContentEditable
+                css={{ margin: 0, fontWeight: 500 }}
+                className="editable"
+                tagName="h4"
+                html={data.project.name}
+                onChange={() => {}}
+              />
+              <List
+                css={{
+                  borderTop: '1px solid var(--imperial-blue)',
+                }}
+              >
+                <h4>Draft:</h4>
+                {data.project.draft.folders.map(folder => (
+                  <Folder
+                    folder={folder}
+                    key={folder.folderID}
+                    onFolderChange={() => {}}
+                    onDocumentPick={onDocumentPick}
+                    selectedDocument={selectedDocument}
+                  />
+                ))}
+              </List>
+              <List
+                css={{
+                  borderTop: '1px solid var(--imperial-blue)',
+                }}
+              >
+                <h4>Notes:</h4>
+                {data.project.notes.folders.map(folder => (
+                  <Folder
+                    folder={folder}
+                    key={folder.folderID}
+                    onFolderChange={() => {}}
+                    onDocumentPick={onDocumentPick}
+                    selectedDocument={selectedDocument}
+                  />
+                ))}
+              </List>
+            </div>
+          );
         }}
-      >
-        {folders.map(folder => (
-          <Folder
-            folder={folder}
-            key={folder.id}
-            onFolderChange={setFolderInternals}
-            onDocumentPick={onDocumentPick}
-            selectedDocument={selectedDocument}
-          />
-        ))}
-      </ul>
-    </aside>
+      </Query>
+    </Aside>
   );
 }
 
 Sidebar.defaultProps = {
-  projectName: '',
   selectedDocument: '',
 };
 
 Sidebar.propTypes = {
-  projectName: PropTypes.string,
-  projectFolders: PropTypes.arrayOf(PropTypes.object).isRequired,
   onDocumentPick: PropTypes.func.isRequired,
   selectedDocument: PropTypes.string,
 };

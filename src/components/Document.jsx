@@ -12,7 +12,6 @@ function Document({ documentName, onClick, isSelected }) {
         css={{
           background: 'none',
           border: 'none',
-          fontSize: 'inherit',
           cursor: 'pointer',
           color: isSelected ? 'red' : 'inherit',
         }}
